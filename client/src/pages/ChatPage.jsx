@@ -58,7 +58,7 @@ const ChatPage = () => {
         </button>
       </div>
     </div>
-    //my name is radhika
+   
   );
 };
 

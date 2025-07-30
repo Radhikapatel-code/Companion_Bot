@@ -8,11 +8,12 @@ const Reminder = require('./models/Reminder');
 dotenv.config();
 const app = express();
 
-app.use(cors({ origin: 'http://localhost:5173' })); // Explicit CORS for frontend
+app.use(cors({ origin: 'http://localhost:5173' }));
 app.use(express.json());
 
 console.log('MONGO_URI:', process.env.MONGO_URI.replace(/:([^@]+)@/, ':****@'));
 
+mongoose.set('debug', true);
 mongoose
   .connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
@@ -27,11 +28,9 @@ cron.schedule('* * * * *', async () => {
     const reminders = await Reminder.find({
       time: { $lte: now },
     });
-    reminders.forEach((reminder) => {
-      console.log(`Reminder due: ${reminder.message} at ${new Date(reminder.time).toLocaleString()}`);
-    });
+    console.log('Cron - Found reminders:', reminders);
   } catch (error) {
-    console.error('Error checking reminders:', error);
+    console.error('Cron - Error checking reminders:', error);
   }
 });
 
